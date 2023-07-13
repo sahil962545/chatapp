@@ -1,3 +1,4 @@
+import 'package:chat_app_real/Login_page.dart';
 import 'package:chat_app_real/MyHomePage.dart';
 import 'package:chat_app_real/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -17,12 +18,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(),
+      home: const Login_page(),
     );
   }
 }
