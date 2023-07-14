@@ -30,7 +30,7 @@ class _SignupState extends State<Signup> {
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 50),
-                    child: Container(
+                    child: SizedBox(
                       height: 400,
                       width: 280,
                       child: Column(
@@ -79,7 +79,7 @@ class _SignupState extends State<Signup> {
                           const SizedBox(
                             height: 30,
                           ),
-                          Container(
+                          SizedBox(
                             width: 300,
                             child: ElevatedButton(
                                 onPressed: () async {
@@ -167,7 +167,7 @@ class _SignupState extends State<Signup> {
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Container(
+                      SizedBox(
                           width: 150,
                           child: ElevatedButton.icon(
                               style: ButtonStyle(

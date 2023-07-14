@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:chat_app_real/MyHomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
