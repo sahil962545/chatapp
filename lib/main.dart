@@ -2,7 +2,6 @@ import 'package:chat_app_real/MyHomePage.dart';
 import 'package:chat_app_real/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:animated_splash_screen/animated_splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,12 +24,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: AnimatedSplashScreen(
-        splash: 'assets/images/splas.jpg',
-        splashIconSize: double.maxFinite,
-        nextScreen: const MyHomePage(),
-        splashTransition: SplashTransition.fadeTransition,
-      ),
+      home: const MyHomePage(),
     );
   }
 }

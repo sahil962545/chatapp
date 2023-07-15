@@ -1,4 +1,5 @@
 import 'package:chat_app_real/Login_page.dart';
+import 'package:chat_app_real/profile_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -96,7 +97,7 @@ class _SignupState extends State<Signup> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              const Login_page(),
+                                              const Profile_page(),
                                         ));
                                   } on FirebaseAuthException catch (e) {
                                     if (e.code == 'weak-password') {

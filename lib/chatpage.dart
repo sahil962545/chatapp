@@ -1,3 +1,4 @@
+import 'package:chat_app_real/NewPersonAdd.dart';
 import 'package:flutter/material.dart';
 
 // ignore: camel_case_types
@@ -12,6 +13,19 @@ class chatpage extends StatefulWidget {
 class _chatpageState extends State<chatpage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return Scaffold(
+      body: const Center(child: Text('Press the button below!')),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const NewPersonAdd(),
+              ));
+        },
+        backgroundColor: Colors.green,
+        child: const Icon(Icons.message),
+      ),
+    );
   }
 }
