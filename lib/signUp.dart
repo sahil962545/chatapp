@@ -1,5 +1,7 @@
-import 'package:chat_app_real/Login_page.dart';
+// ignore: file_names
+import 'package:chat_app_real/models/usermodel.dart';
 import 'package:chat_app_real/profile_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -12,6 +14,8 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
+  // ignore: non_constant_identifier_names
+  UserCredential? Credential;
   String email = " ";
   String pass = " ";
 
@@ -85,20 +89,11 @@ class _SignupState extends State<Signup> {
                             child: ElevatedButton(
                                 onPressed: () async {
                                   try {
-                                    // ignore: unused_local_variable
-                                    UserCredential userCredential =
-                                        await FirebaseAuth.instance
-                                            .createUserWithEmailAndPassword(
+                                    Credential = await FirebaseAuth.instance
+                                        .createUserWithEmailAndPassword(
                                       email: email,
                                       password: pass,
                                     );
-                                    // ignore: use_build_context_synchronously
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const Profile_page(),
-                                        ));
                                   } on FirebaseAuthException catch (e) {
                                     if (e.code == 'weak-password') {
                                       print(
@@ -110,6 +105,31 @@ class _SignupState extends State<Signup> {
                                     }
                                   } catch (e) {
                                     print(e);
+                                  }
+
+                                  if (Credential != null) {
+                                    String uid = Credential!.user!.uid;
+                                    Usermodel newuser = Usermodel(
+                                      uid: uid,
+                                      email: email,
+                                      fullname: " ",
+                                      profilepic: " ",
+                                    );
+                                    await FirebaseFirestore.instance
+                                        .collection("users")
+                                        .doc(uid)
+                                        // ignore: avoid_print
+                                        .set(newuser.toMap())
+                                        .then((value) =>
+                                            print("New User Created"));
+                                    // ignore: use_build_context_synchronously
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Profile_page(
+                                              firebaseUser: Credential!.user!,
+                                              userModel: newuser),
+                                        ));
                                   }
                                 },
                                 style: ButtonStyle(

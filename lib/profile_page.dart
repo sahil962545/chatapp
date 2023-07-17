@@ -1,14 +1,21 @@
 import 'dart:io';
-
-import 'package:chat_app_real/MyHomePage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'models/usermodel.dart';
+
 // ignore: camel_case_types
 class Profile_page extends StatefulWidget {
-  const Profile_page({super.key});
+  final Usermodel userModel;
+  final User firebaseUser;
+
+  const Profile_page(
+      {super.key, required this.userModel, required this.firebaseUser});
 
   @override
   State<Profile_page> createState() => _Profile_pageState();
@@ -33,9 +40,42 @@ class _Profile_pageState extends State<Profile_page> {
         await ImageCropper().cropImage(sourcePath: file.path);
     if (croppedImage != null) {
       setState(() {
-        imageFile = File(croppedImage!.path);
+        imageFile = File(croppedImage.path);
       });
     }
+  }
+
+  void checkvalues() {
+    String fullname = fullnamecontroller.text.trim();
+
+    if (fullname == " ") {
+      print("fill all the data");
+    } else {
+      uploadeDate();
+    }
+  }
+
+  Future<void> uploadeDate() async {
+    UploadTask uploadTask = FirebaseStorage.instance
+        .ref("profilepictures")
+        .child(widget.userModel.uid.toString())
+        .putFile(imageFile!);
+
+    TaskSnapshot snapshot = await uploadTask;
+
+    String imageUrl = await snapshot.ref.getDownloadURL();
+    String fullname = fullnamecontroller.text.trim();
+
+    widget.userModel.fullname = fullname;
+    widget.userModel.profilepic = imageUrl;
+
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(widget.userModel.uid)
+        .set(widget.userModel.toMap())
+        .then((value) {
+      print("data uploaded");
+    });
   }
 
   void showPhotoOption() {
@@ -67,18 +107,6 @@ class _Profile_pageState extends State<Profile_page> {
     );
   }
 
-  void checkvalues() {
-    String fullname = fullnamecontroller.text.trim();
-
-    if (fullname == " ") {
-      print("fill all the data");
-    } else {
-      uploadData();
-    }
-  }
-
-  void uploadData() async {}
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,7 +133,7 @@ class _Profile_pageState extends State<Profile_page> {
           ),
           TextField(
             controller: fullnamecontroller,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: "Full Name",
             ),
           ),
@@ -114,11 +142,7 @@ class _Profile_pageState extends State<Profile_page> {
           ),
           CupertinoButton(
             onPressed: () {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MyHomePage(),
-                  ));
+              checkvalues();
             },
             color: Colors.blue[500],
             child: const Text("submit"),
